@@ -339,7 +339,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 * ReturnVal:	none
 * Notes:		none
 */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
+void GPIO_IRQConfig(uint8_t IRQNumber,  uint8_t EnorDi)
 {
 
 	if(EnorDi== ENABLE)
@@ -377,6 +377,17 @@ void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
 
 }
 
+void GPIO_IRQPriority_Config(uint8_t IRQNumber, uint32_t IRQPriority)
+{
+  //determine IPR register
+	uint8_t iprx =  IRQNumber/4;
+	//determine IPR register section
+	uint8_t iprx_section = IRQNumber%4;
+	uint8_t shift_amount = (8* iprx_section) + (8-NO_OF_PRIO_BITS_IMPLEMENTED);
+	*(NVIC_PR_BASE_ADDR+iprx) |= (IRQPriority<<(shift_amount));
+}
+
+
 /*****************************************************************
 * Function name: !!!!!TODO
 * Description:
@@ -385,6 +396,13 @@ void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
 * ReturnVal:	none
 * Notes:		none
 */
-void GPIO_IRQHandling(uint8_t PinNumber);
+void GPIO_IRQHandling(uint8_t PinNumber)
+{
+	//clear exti pending register
+	if (EXTI->PR& (1<<PinNumber))
+	{
+		EXTI->PR |= (1<<PinNumber);
+	}
+}
 
 

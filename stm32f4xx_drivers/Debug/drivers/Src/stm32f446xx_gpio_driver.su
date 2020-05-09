@@ -7,3 +7,5 @@ stm32f446xx_gpio_driver.c:288:6:GPIO_WriteToOutputPin	16	static
 stm32f446xx_gpio_driver.c:310:6:GPIO_WriteToOutputPort	16	static
 stm32f446xx_gpio_driver.c:324:6:GPIO_ToggleOutputPin	16	static
 stm32f446xx_gpio_driver.c:342:6:GPIO_IRQConfig	16	static
+stm32f446xx_gpio_driver.c:380:6:GPIO_IRQPriority_Config	24	static
+stm32f446xx_gpio_driver.c:399:6:GPIO_IRQHandling	16	static

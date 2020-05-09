@@ -24,6 +24,10 @@
 #define NVIC_ICER2			((volatile uint32_t*)0xE000E188)
 #define NVIC_ICER3			((volatile uint32_t*)0xE000E18C)
 
+/*NVIC priority register*/
+#define NVIC_PR_BASE_ADDR	((volatile uint32_t*)0xE000E400)
+
+#define NO_OF_PRIO_BITS_IMPLEMENTED						4
 
 
 /***********************************MCU PERIPHERAL DATA********************************************/
@@ -67,6 +71,7 @@
 
 /* base addresses of peripherals on APB2 Bus */
 #define SPI1_BASEADDR				(APB2PERIPH_BASEADDR + 0X3000)
+#define SPI4_BASEADDR				(APB2PERIPH_BASEADDR + 0X3400)
 #define USART1_BASEADDR				(APB2PERIPH_BASEADDR + 0X1000)
 #define USART6_BASEADDR				(APB2PERIPH_BASEADDR + 0X1400)
 #define EXTI_BASEADDR				(APB2PERIPH_BASEADDR + 0X3C00)
@@ -166,6 +171,28 @@ typedef struct
 
 } SYSCFG_RegDef_t;
 
+/*register structure for SPI peripheral. Every 32 bits (4 bytes) is in each parameter */
+
+typedef struct
+{
+	volatile uint32_t CR1;				/*Address offset: 0x00 */
+	volatile uint32_t CR2;				/*Address offset: 0x04 */
+	volatile uint32_t SR;				/*Address offset: 0x08*/
+	volatile uint32_t DR;				/*Address offset: 0x0C */
+	volatile uint32_t CRCPR;			/*Address offset: 0x10 */
+	volatile uint32_t RXCRCR;			/*Address offset: 0x14 */
+	volatile uint32_t TXCRCR;			/*Address offset: 0x18 */
+	volatile uint32_t I2SCFGR;			/*Address offset: 0x1C */
+	volatile uint32_t I2SPR;			/*Address offset: 0x20 */
+
+
+
+} SPI_RegDef_t;
+
+
+
+
+
 /* The following lines of code defines macros for each peripheral base address
  * typecasted as a pointer with one of the structs defined above. "A pointer with a struct"
  * This allows easier coding in an application.
@@ -187,6 +214,11 @@ typedef struct
 #define EXTI   		((EXTI_RegDef_t*)EXTI_BASEADDR)
 
 #define SYSCFG		((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
+
+#define SPI1		((SPI_RegDef_t*)SPI1_BASEADDR)
+#define SPI2		((SPI_RegDef_t*)SPI2_BASEADDR)
+#define SPI3		((SPI_RegDef_t*)SPI3_BASEADDR)
+
 
 
 
@@ -262,7 +294,7 @@ typedef struct
 /*Clock Disable Macros for SYSCFG peripherals */
 #define SYSCFG_PERICLK_DI()	(RCC->APB2ENR &=~(1<<14)
 
-/*GPIO Peripheral Reset Macros from the ref manual, have to set bit 0 of AHB1RSTR to 1 then 0 to reset */
+/*Peripheral Reset Macros from the ref manual, have to set bit 0 of AHB1RSTR to 1 then 0 to reset */
 #define GPIOA_REG_RESET()			do{(RCC->AHB1RSTR |=(1<<0)); (RCC->AHB1RSTR &= ~(1<<0));}while(0)
 #define GPIOB_REG_RESET()			do{(RCC->AHB1RSTR |=(1<<1)); (RCC->AHB1RSTR &= ~(1<<0));}while(0)
 #define GPIOC_REG_RESET()			do{(RCC->AHB1RSTR |=(1<<2)); (RCC->AHB1RSTR &= ~(1<<0));}while(0)
@@ -271,6 +303,10 @@ typedef struct
 #define GPIOF_REG_RESET()			do{(RCC->AHB1RSTR |=(1<<5)); (RCC->AHB1RSTR &= ~(1<<0));}while(0)
 #define GPIOG_REG_RESET()			do{(RCC->AHB1RSTR |=(1<<6)); (RCC->AHB1RSTR &= ~(1<<0));}while(0)
 #define GPIOH_REG_RESET()			do{(RCC->AHB1RSTR |=(1<<7)); (RCC->AHB1RSTR &= ~(1<<0));}while(0)
+#define SPI1_REG_RESET()			do{(RCC->AHB2RSTR |=(1<<12)); (RCC->APB2RSTR &= ~(1<<12));}while(0)
+#define SPI2_REG_RESET()			do{(RCC->APB1RSTR |=(1<<14)); (RCC->APB1RSTR &= ~(1<<14));}while(0)
+#define SPI3_REG_RESET()			do{(RCC->APB1RSTR |=(1<<15)); (RCC->APB1RSTR &= ~(1<<15));}while(0)
+#define SPI4_REG_RESET()			do{(RCC->AHB2RSTR |=(1<<12)); (RCC->APB2RSTR &= ~(1<<13));}while(0)
 
 
 /*generic macros*/
