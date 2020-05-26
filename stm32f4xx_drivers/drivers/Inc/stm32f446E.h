@@ -11,7 +11,10 @@
 #ifndef INC_STM32F446E_H_
 #define INC_STM32F446E_H_
 
+/*includes*/
+
 #include <stdint.h>
+
 
 /*********************************************ARM CORTEX M PROCESSOR DATA*******************************************/
 /**arm cortex m4 NVIC register addresses*/
@@ -108,28 +111,28 @@ typedef struct
 	volatile uint32_t RESERVE0;		/* no data at address offset  0x1C*/
 	volatile uint32_t APB1RSTR;		/*RCC APB1 peripheral reset register Address offset: 0x20 */
 	volatile uint32_t APB2RSTR;		/*RCC APB2 peripheral reset register Address offset: 0x24 */
-	volatile uint32_t RESERVE1;		/* no data at address offset  0x28*/
-	volatile uint32_t RESERVE2;		/* no data at address offset  0x2C*/
+	volatile uint32_t RESERVE1[2];		/* no data at address offset  0x28*/
+	//volatile uint32_t RESERVE2;		/* no data at address offset  0x2C*/
 	volatile uint32_t AHB1ENR;		/*RCC AHB1 peripheral clock enable register Address offset: 0x30 */
 	volatile uint32_t AHB2ENR;		/*RCC AHB2 peripheral clock enable register Address offset: 0x34 */
 	volatile uint32_t AHB3ENR;		/*RCC AHB3 peripheral clock enable register Address offset: 0x38 */
-	volatile uint32_t RESERVE3;		/*RESERVED Address offset: 0x3C */
+	volatile uint32_t RESERVE2;		/*RESERVED Address offset: 0x3C */
 	volatile uint32_t APB1ENR;		/*RCC APB1 peripheral clock enable register Address offset: 0x40*/
 	volatile uint32_t APB2ENR;		/*RCC APB2 peripheral clock enable register Address offset: 0x44*/
-	volatile uint32_t RESERVE4;		/* no data at address offset  0x48*/
-	volatile uint32_t RESERVE5;		/* no data at address offset  0x4C*/
+	volatile uint32_t RESERVED3[2];		/* no data at address offset  0x48*/
+	//volatile uint32_t RESERVE5;		/* no data at address offset  0x4C*/
 	volatile uint32_t AHB1LPENR;	/*RCC AHB1 peripheral clock enable in low power mode register Address offset: 0x50*/
 	volatile uint32_t AHB2LPENR;	/*RCC AHB2 peripheral clock enable in low power mode register Address offset: 0x54*/
 	volatile uint32_t AHB3LPENR;	/*RCC AHB3 peripheral clock enable in low power mode register Address offset: 0x58*/
-	volatile uint32_t RESERVE6;		/* no data at address offset  0x5C*/
+	volatile uint32_t RESERVE4;		/* no data at address offset  0x5C*/
 	volatile uint32_t APB1LPENR;	/*RCC APB1 peripheral clock enable in low power mode register Address offset: 0x60*/
 	volatile uint32_t APB2LPENR;	/*RCC APB2 peripheral clock enable in low power mode register Address offset: 0x64*/
-	volatile uint32_t RESERVE7;		/* no data at address offset  0x68*/
-	volatile uint32_t RESERVE8;		/* no data at address offset  0x6C*/
+	volatile uint32_t RESERVE5[2];		/* no data at address offset  0x68*/
+	//volatile uint32_t RESERVE8;		/* no data at address offset  0x6C*/
 	volatile uint32_t BDCR;			/* RCC Backup domain control register	Address offset: 0x70*/
 	volatile uint32_t CSR;			/* RCC clock control & status register	Address offset: 0x74*/
-	volatile uint32_t RESERVE9;		/* no data at address offset  0x78*/
-	volatile uint32_t RESERVE10;	/* no data at address offset  0x7C*/
+	volatile uint32_t RESERVE6[2];		/* no data at address offset  0x78*/
+	//volatile uint32_t RESERVE10;	/* no data at address offset  0x7C*/
 	volatile uint32_t SSCGR;		/* RCC clock control & status register	Address offset: 0x80*/
 	volatile uint32_t PLLI2SCFGR;	/* RCC PLLI2S configuration register	Address offset: 0x84*/
 	volatile uint32_t PLLSAICFGR;	/* RCC PLL configuration register	Address offset: 0x88*/
@@ -161,11 +164,9 @@ typedef struct
 	volatile uint32_t MEMRMP;				/*Address offset: 0x00 */
 	volatile uint32_t PMC;					/*Address offset: 0x04 */
 	volatile uint32_t EXTICR[4];				/*Address offset: 0x08-014 */
-	volatile uint32_t RESERVED1;			/*Address offset: 0x18 */
-	volatile uint32_t RESERVED2;			/*Address offset: 0x1C */
+	volatile uint32_t RESERVED1[2];			/*Address offset: 0x18 -01XC */
 	volatile uint32_t CMPCR;				/*Address offset: 0x20 */
-	volatile uint32_t RESERVED3;			/*Address offset: 0x24 */
-	volatile uint32_t RESERVED4;			/*Address offset: 0x28 */
+	volatile uint32_t RESERVED2[2];			/*Address offset: 0x24-0X28 */
 	volatile uint32_t CFGR;					/*Address offset: 0x2C */
 
 
@@ -218,6 +219,7 @@ typedef struct
 #define SPI1		((SPI_RegDef_t*)SPI1_BASEADDR)
 #define SPI2		((SPI_RegDef_t*)SPI2_BASEADDR)
 #define SPI3		((SPI_RegDef_t*)SPI3_BASEADDR)
+#define SPI4		((SPI_RegDef_t*)SPI4_BASEADDR)
 
 
 
@@ -309,11 +311,52 @@ typedef struct
 #define SPI4_REG_RESET()			do{(RCC->AHB2RSTR |=(1<<12)); (RCC->APB2RSTR &= ~(1<<13));}while(0)
 
 
+/*bit position definitions for SPI peripheral */
+#define SPI_CR1_CPHA					0
+#define SPI_CR1_CPOL					1
+#define SPI_CR1_MSTR					2
+#define SPI_CR1_BR						3
+#define SPI_CR1_SPE						6
+#define SPI_CR1_LSBFRST					7
+#define SPI_CR1_SSI						8
+#define SPI_CR1_SSM						9
+#define SPI_CR1_RXONLY					10
+#define SPI_CR1_DFF						11
+#define SPI_CR1_CRCNXT					12
+#define SPI_CR1_CRCEN					13
+#define SPI_CR1_BIDIOE					14
+#define SPI_CR1_BIDIMODE				15
+
+#define SPI_CR2_RXMDAEN					0
+#define SPI_CR2_TXMDAEN					1
+#define SPI_CR2_SSOE					2
+#define SPI_CR2_FRF						4
+#define SPI_CR2_ERRIE					5
+#define SPI_CR2_RXNEIE					6
+#define SPI_CR2_TXEIE					7
+
+#define SPI_SR_RXNE						0
+#define SPI_SR_TXE						1
+#define SPI_SR_CHSIDE					2
+#define SPI_SR_UDR						3
+#define SPI_SR_CRCERR					4
+#define SPI_SR_MODF						5
+#define SPI_SR_OVR						6
+#define SPI_SR_BSY						7
+#define SPI_SR_FRE						8
+
+
+
+
+
+
+
 /*generic macros*/
 #define ENABLE 							1
 #define DISABLE 						0
 #define SET								ENABLE
 #define RESET							DISABLE
+
 /*IRQ numbers of stm32f446E from table 38 vector table of stm32f446e ref manual*/
 #define IRQ_NO_EXTI0					6
 #define IRQ_NO_EXTI1					7
@@ -323,7 +366,8 @@ typedef struct
 #define IRQ_NO_EXTI9_5					23
 #define IRQ_NO_EXTI15_10				40
 
-/*includes*/
 #include "stm32f446xx_gpio_driver.h"
+#include "stm32f446xx_SPI_driver.h"
+
 
 #endif /* INC_STM32F446E_H_ */

@@ -34,7 +34,7 @@ int main(void)
 	Gpioled.GPIO_PinConfig.GPIO_PinOPType = GPIO_OUT_TYPE_PP;
 	Gpioled.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 
-	GPIO_PeriClockControl(GPIOA, ENABLE);
+
 	GPIO_Init(&Gpioled);
 
 	//button configuration
@@ -44,12 +44,13 @@ int main(void)
 	GpioBtn.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	GpioBtn.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 
-	GPIO_PeriClockControl(GPIOC, ENABLE);
+
 	GPIO_Init(&GpioBtn);
 
 	while (1)
 	{
-		if (!GPIO_ReadFromInputPin(GPIOC,GPIO_PIN_NUM_13))
+		//button input on nucleo board has pull up resistor. so toggle output on LOW
+		if (GPIO_ReadFromInputPin(GPIOC,GPIO_PIN_NUM_13)==0)
 				{
 					delay();//debounce prevention
 					GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NUM_5);

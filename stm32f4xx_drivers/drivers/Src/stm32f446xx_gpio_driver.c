@@ -108,12 +108,16 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
 */
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {	uint32_t temp=0;
+
+	//enable peripheral clock
+	GPIO_PeriClockControl(pGPIOHandle->pGPIOx, ENABLE);
+
 	//see if its not an interrupt mode
 	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
 	{
 		//configure pin mode
-		temp=pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-		pGPIOHandle->pGPIOx->MODER &= ~(0x3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); //clear bit fields before setting
+		temp=(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+		pGPIOHandle->pGPIOx->MODER &= ~(0x3 <<(2* pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber)); //clear bit fields before setting
 		pGPIOHandle->pGPIOx->MODER |=temp; //set bits
 
 	}
@@ -162,26 +166,26 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	}
 	//configure speed
 	temp=0;
-	temp=pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-	pGPIOHandle->pGPIOx->OSPEEDR  &= ~(0x3 <<pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+	temp=(pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->OSPEEDR  &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 	pGPIOHandle->pGPIOx->OSPEEDR |= temp;
 	//configure pullup/pulldown
 	temp=0;
-	temp=pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-	pGPIOHandle->pGPIOx->PUPDR  &= ~(0x3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+	temp=(pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandle->pGPIOx->PUPDR  &= ~(0x3 << (2* pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 	pGPIOHandle->pGPIOx->PUPDR |= temp;
 	//configure output type
 	temp=0;
-	temp=pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << ( pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+	temp=(pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << ( pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 	pGPIOHandle->pGPIOx->OTYPER  &= ~(0x1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 	pGPIOHandle->pGPIOx->OTYPER |= temp;
 
 	temp=0;
 
-	if((pGPIOHandle->GPIO_PinConfig.GPIO_PinAltFuncMode) == GPIO_MODE_ALTFN)
+	if((pGPIOHandle->GPIO_PinConfig.GPIO_PinMode) == GPIO_MODE_ALTFN)
 	{
 		//Need to revisit this to understand
-		uint32_t temp1, temp2;
+		uint8_t temp1, temp2;
 		temp1=pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber/8;
 		temp2=pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber%8;
 		pGPIOHandle->pGPIOx->AFR[temp1]&= ~(0xF<<(4*temp2));
@@ -256,7 +260,7 @@ uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
 	uint8_t value;
 	value = (uint8_t)((pGPIOx->IDR >> PinNumber) & 0x00000001);
-
+	return value;
 }
 
 
@@ -272,6 +276,7 @@ uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
 {
 	uint16_t value;
 	value = (uint16_t)pGPIOx->IDR ;
+	return value;
 
 }
 
