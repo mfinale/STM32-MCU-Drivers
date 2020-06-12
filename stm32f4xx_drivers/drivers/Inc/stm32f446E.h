@@ -14,6 +14,7 @@
 /*includes*/
 
 #include <stdint.h>
+#include <stddef.h>
 
 
 /*********************************************ARM CORTEX M PROCESSOR DATA*******************************************/
@@ -190,11 +191,30 @@ typedef struct
 
 } SPI_RegDef_t;
 
+/*register structure for I2C peripheral. Every 32 bits (4 bytes) is in each parameter */
+
+typedef struct
+{
+	volatile uint32_t CR1;				/*Address offset: 0x00 */
+	volatile uint32_t CR2;				/*Address offset: 0x04 */
+	volatile uint32_t OAR1;				/*Address offset: 0x08*/
+	volatile uint32_t OAR2;				/*Address offset: 0x0C */
+	volatile uint32_t DR;				/*Address offset: 0x10 */
+	volatile uint32_t SR1;				/*Address offset: 0x14 */
+	volatile uint32_t SR2;				/*Address offset: 0x18 */
+	volatile uint32_t CCR;				/*Address offset: 0x1C */
+	volatile uint32_t TRISE;			/*Address offset: 0x20 */
+	volatile uint32_t FLTR;				/*Address offset: 0x24 */
+
+
+} I2C_RegDef_t;
 
 
 
 
-/* The following lines of code defines macros for each peripheral base address
+
+/* PERIPHERAL DEFINITIONS
+ * The following lines of code defines macros for each peripheral base address
  * typecasted as a pointer with one of the structs defined above. "A pointer with a struct"
  * This allows easier coding in an application.
  * Ex: pGPIOA->MODER =25; same as *(0x4002000+0x00) =25;
@@ -220,6 +240,10 @@ typedef struct
 #define SPI2		((SPI_RegDef_t*)SPI2_BASEADDR)
 #define SPI3		((SPI_RegDef_t*)SPI3_BASEADDR)
 #define SPI4		((SPI_RegDef_t*)SPI4_BASEADDR)
+
+#define I2C1		((I2C_RegDef_t*)I2C1_BASEADDR)
+#define I2C2		((I2C_RegDef_t*)I2C2_BASEADDR)
+#define I2C3		((I2C_RegDef_t*)I2C3_BASEADDR)
 
 
 
@@ -309,6 +333,9 @@ typedef struct
 #define SPI2_REG_RESET()			do{(RCC->APB1RSTR |=(1<<14)); (RCC->APB1RSTR &= ~(1<<14));}while(0)
 #define SPI3_REG_RESET()			do{(RCC->APB1RSTR |=(1<<15)); (RCC->APB1RSTR &= ~(1<<15));}while(0)
 #define SPI4_REG_RESET()			do{(RCC->AHB2RSTR |=(1<<12)); (RCC->APB2RSTR &= ~(1<<13));}while(0)
+#define I2C1_REG_RESET()			do{(RCC->APB1RSTR |=(1<<21)); (RCC->APB1RSTR &= ~(1<<21));}while(0)
+#define I2C2_REG_RESET()			do{(RCC->APB1RSTR |=(1<<22)); (RCC->APB1RSTR &= ~(1<<22));}while(0)
+#define I2C3_REG_RESET()			do{(RCC->APB1RSTR |=(1<<23)); (RCC->APB1RSTR &= ~(1<<23));}while(0)
 
 
 /*bit position definitions for SPI peripheral */
@@ -345,6 +372,81 @@ typedef struct
 #define SPI_SR_BSY						7
 #define SPI_SR_FRE						8
 
+/*bit position definitions for I2C peripheral */
+#define I2C_CR1_PE						0
+#define I2C_CR1_SMBUS					1
+#define I2C_CR1_SMBTYPE					3
+#define I2C_CR1_ENARP					4
+#define I2C_CR1_ENPEC					5
+#define I2C_CR1_ENGC					6
+#define I2C_CR1_NOSTRETCH				7
+#define I2C_CR1_START					8
+#define I2C_CR1_STOP					9
+#define I2C_CR1_ACK						10
+#define I2C_CR1_POS						11
+#define I2C_CR1_PEC						12
+#define I2C_CR1_ALERT					13
+#define I2C_CR1_SWRST					15
+
+#define I2C_CR2_FREQ0					0
+#define I2C_CR2_FREQ1					1
+#define I2C_CR2_FREQ2					2
+#define I2C_CR2_FREQ3					3
+#define I2C_CR2_FREQ4					4
+#define I2C_CR2_FREQ5					5
+#define I2C_CR2_ITERREN					8
+#define I2C_CR2_ITEVTEN					9
+#define I2C_CR2_ITBUFEN					10
+#define I2C_CR2_DMAEN					11
+#define I2C_CR2_LAST					12
+
+#define I2C_SR1_SB						0
+#define I2C_SR1_ADDR					1
+#define I2C_SR1_BTF						2
+#define I2C_SR1_ADD10					3
+#define I2C_SR1_STOPF					4
+#define I2C_SR1_RXNE					6
+#define I2C_SR1_TXE						7
+#define I2C_SR1_BERR					8
+#define I2C_SR1_ARLO					9
+#define I2C_SR1_AF						10
+#define I2C_SR1_OVR						11
+#define I2C_SR1_PECERR					12
+#define I2C_SR1_TIMEOUT					14
+#define I2C_CR1_SMBALERT				15
+
+#define I2C_SR2_MSL						0
+#define I2C_SR2_BUSY					1
+#define I2C_SR2_TRA						2
+#define I2C_SR2_GENCALL					4
+#define I2C_SR2_SMBDEFAULT				5
+#define I2C_SR2_SMBHOST					6
+#define I2C_SR2_DUALF					7
+#define I2C_SR2_PEC0					8
+#define I2C_SR2_PEC1					9
+#define I2C_SR2_PEC2					10
+#define I2C_SR2_PEC3					11
+#define I2C_SR2_PEC4					12
+#define I2C_SR2_PEC5					13
+#define I2C_SR2_PEC6					14
+#define I2C_SR2_PEC7					15
+
+
+#define I2C_CCR_CCR0					0
+#define I2C_CCR_CCR1					1
+#define I2C_CCR_CCR2					2
+#define I2C_CCR_CCR3					3
+#define I2C_CCR_CCR4					4
+#define I2C_CCR_CCR5					5
+#define I2C_CCR_CCR6					6
+#define I2C_CCR_CCR7					7
+#define I2C_CCR_CCR8					8
+#define I2C_CCR_CCR9					9
+#define I2C_CCR_CCR10					10
+#define I2C_CCR_CCR11					11
+#define I2C_CCR_DUTY					14
+#define I2C_CCR_F/S						15
+
 
 
 
@@ -365,9 +467,13 @@ typedef struct
 #define IRQ_NO_EXTI4					10
 #define IRQ_NO_EXTI9_5					23
 #define IRQ_NO_EXTI15_10				40
+#define IRQ_NO_SPI1						42
+#define IRQ_NO_SPI2						43
+#define IRQ_NO_SPI3						58
 
 #include "stm32f446xx_gpio_driver.h"
 #include "stm32f446xx_SPI_driver.h"
+#include "stm32f446xx_I2C_driver.h"
 
 
 #endif /* INC_STM32F446E_H_ */
