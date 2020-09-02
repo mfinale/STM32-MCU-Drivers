@@ -445,11 +445,7 @@ typedef struct
 #define I2C_CCR_CCR10					10
 #define I2C_CCR_CCR11					11
 #define I2C_CCR_DUTY					14
-#define I2C_CCR_F/S						15
-
-
-
-
+#define I2C_CCR_FS 						15
 
 
 
@@ -470,6 +466,12 @@ typedef struct
 #define IRQ_NO_SPI1						42
 #define IRQ_NO_SPI2						43
 #define IRQ_NO_SPI3						58
+#define IRQ_NO_I2C1_EV					31
+#define IRQ_NO_I2C1_ER					32
+#define IRQ_NO_I2C2_EV					33
+#define IRQ_NO_I2C2_ER					34
+#define IRQ_NO_I2C3_EV					72
+#define IRQ_NO_I2C3_ER					73
 
 #include "stm32f446xx_gpio_driver.h"
 #include "stm32f446xx_SPI_driver.h"

@@ -1,4 +1,4 @@
-"Src/008_spi_txrx_arduino.o"
+"Src/011i2c_masterrx_testing.o"
 "Startup/startup_stm32f446retx.o"
 "drivers/Src/stm32f446xx_I2C_driver.o"
 "drivers/Src/stm32f446xx_SPI_driver.o"

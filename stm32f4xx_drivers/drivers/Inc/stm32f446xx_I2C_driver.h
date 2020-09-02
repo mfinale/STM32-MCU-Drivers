@@ -32,8 +32,19 @@ typedef struct{
 
 	I2C_RegDef_t *pI2Cx;  /*this pointer holds the I2C base address*/
 	I2C_PinConfig_t I2C_Config;  /*this holds gpio pin configuration settings*/
+	uint8_t			*pTxBuffer; /*pointer to data in TxBuffer*/
+	uint8_t			*pRxBuffer; /*pointer to data in RxBuffer*/
+	uint32_t		TxLen; /*length of TX data*/
+	uint32_t		RxLen; /*length of TX data*/
+	uint8_t			TxRxState;	/*to determine if we are transmitting or receiving*/
+	uint8_t			DevAddr; /* slave/device address */
+	uint32_t		RxSize;
+	uint8_t			Sr;		/* option to enable repeated start */
+
 
 }I2C_Handle_t;
+
+
 
 
 
@@ -51,6 +62,12 @@ typedef struct{
 #define I2C_FM_DUTY_2		0
 #define I2C_FM_DUTY_16_9	1
 
+/*I2C Application States */
+#define I2C_READY			0
+#define I2C_BUSY_IN_RX		1
+#define I2C_BUSY_IN_TX		2
+
+
 /**flag definitions of I2C status registerS**/
 #define I2C_TXE_FLAG 				(1<<I2C_SR1_TXE)
 #define I2C_RXNE_FLAG 				(1<<I2C_SR1_RXNE)
@@ -65,6 +82,10 @@ typedef struct{
 #define I2C_ADDR_FLAG 			(1<<I2C_SR1_ADDR)
 
 
+/* I2C application events macros */
+#define I2C_EVENT_TX_COMPLETE	0
+#define I2C_EVENT_RX_COMPLETE	1
+#define I2C_EVENT_STOP			2
 
 
 
@@ -94,13 +115,17 @@ void I2C_Init(I2C_Handle_t *I2CHandle);
 void I2C_DeInit(I2C_RegDef_t *pI2Cx);
 
 /* Data send/receiver*/
-void I2CMasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveaddr);
+void I2CMasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveaddr, uint8_t SR);
+void I2CMasterRcvData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t len, uint8_t slaveaddr, uint8_t SR);
 
+uint8_t I2CMasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveaddr, uint8_t SR);
+uint8_t I2CMasterRcvDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t len, uint8_t slaveaddr, uint8_t SR);
 
 /*Interrupt Control*/
 void I2C_IRQConfig(uint8_t IRQNumber,  uint8_t EnorDi);
-//void I2C_IRQHandling(SPI_Handle_t *SPIhandle);
 void I2C_IRQPriority_Config(uint8_t IRQNumber, uint32_t IRQPriority);
+void I2C_EVENT_IRQHandling(I2C_Handle_t *pI2CHandle);
+void I2C_ERROR_IRQHandling(I2C_Handle_t *pI2CHandle);
 
 void I2C_PeripheralControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
 
