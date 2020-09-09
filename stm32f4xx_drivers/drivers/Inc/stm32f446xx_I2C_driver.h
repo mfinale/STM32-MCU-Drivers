@@ -24,14 +24,14 @@ typedef struct{
 
 
 
-}I2C_PinConfig_t;
+}I2C_Config_t;
 
 
 /* I2C HANDLE STRUCTURE */
 typedef struct{
 
-	I2C_RegDef_t *pI2Cx;  /*this pointer holds the I2C base address*/
-	I2C_PinConfig_t I2C_Config;  /*this holds gpio pin configuration settings*/
+	I2C_RegDef_t 	*pI2Cx;  /*this pointer holds the I2C base address*/
+	I2C_Config_t 	I2C_Config;  /*this holds gpio pin configuration settings*/
 	uint8_t			*pTxBuffer; /*pointer to data in TxBuffer*/
 	uint8_t			*pRxBuffer; /*pointer to data in RxBuffer*/
 	uint32_t		TxLen; /*length of TX data*/
@@ -79,14 +79,18 @@ typedef struct{
 #define I2C_AF_FLAG 				(1<<I2C_SR1_AF)
 #define I2C_OVR_FLAG 				(1<<I2C_SR1_OVR)
 #define I2C_TIMEOUT_FLAG 			(1<<I2C_SR1_TIMEOUT)
-#define I2C_ADDR_FLAG 			(1<<I2C_SR1_ADDR)
+#define I2C_ADDR_FLAG 				(1<<I2C_SR1_ADDR)
 
 
 /* I2C application events macros */
 #define I2C_EVENT_TX_COMPLETE	0
 #define I2C_EVENT_RX_COMPLETE	1
 #define I2C_EVENT_STOP			2
-
+#define I2C_ERROR_BERR		    3
+#define I2C_ERROR_ARLO 		 	4
+#define I2C_ERROR_AF			5
+#define I2C_ERROR_OVR			6
+#define I2C_ERROR_TIMEOUT		7
 
 
 
@@ -110,6 +114,10 @@ typedef struct{
 /* Peripheral Clock Control*/
 void I2C_PeriClockControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
 
+/* Peripheral Control */
+void I2C_PeripheralControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
+
+
 /*  Init and De-init*/
 void I2C_Init(I2C_Handle_t *I2CHandle);
 void I2C_DeInit(I2C_RegDef_t *pI2Cx);
@@ -121,14 +129,25 @@ void I2CMasterRcvData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t len
 uint8_t I2CMasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveaddr, uint8_t SR);
 uint8_t I2CMasterRcvDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t len, uint8_t slaveaddr, uint8_t SR);
 
+/*Extra Peripheral controls*/
+void I2C_CloseReceiveData(I2C_Handle_t *pI2CHandle);
+void I2C_CloseSendData(I2C_Handle_t *pI2CHandle);
+void I2C_GenerateStopCondition(I2C_RegDef_t *pI2Cx);
+void I2C_GenerateStartCondition(I2C_RegDef_t *pI2Cx);
+void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
+
 /*Interrupt Control*/
 void I2C_IRQConfig(uint8_t IRQNumber,  uint8_t EnorDi);
 void I2C_IRQPriority_Config(uint8_t IRQNumber, uint32_t IRQPriority);
 void I2C_EVENT_IRQHandling(I2C_Handle_t *pI2CHandle);
 void I2C_ERROR_IRQHandling(I2C_Handle_t *pI2CHandle);
 
-void I2C_PeripheralControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
 
 
+/*
+ * Application Callback
+ */
+
+void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEv);
 #endif /* INC_STM32F446XX_GPIO_DRIVER_H_ */
 

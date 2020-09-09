@@ -1,6 +1,0 @@
-008_spi_txrx_arduino.c:56:6:delay	16	static
-008_spi_txrx_arduino.c:72:6:SPI2_GPIO_Init	24	static
-008_spi_txrx_arduino.c:102:6:SPI2_Init	40	static
-008_spi_txrx_arduino.c:115:6:GPIO_ButtonInit	24	static
-008_spi_txrx_arduino.c:130:9:SPI_Verifyresponse	16	static
-008_spi_txrx_arduino.c:139:5:main	24	static

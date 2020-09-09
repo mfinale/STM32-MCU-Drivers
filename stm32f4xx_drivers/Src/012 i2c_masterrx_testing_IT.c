@@ -1,7 +1,10 @@
 /*
  * 011i2c_master_rx_testing.c
  *
- *  Created on: Jun 17, 2020
+ *  Created on: September 4th, 2020
+ *
+ *  I2C communication between stm 32 and arduino but with Interrupts enabled!
+ *
  *      Author: Michael Finale
  *      Connections required:
  *      Cn5(10)->d15->PB8->i2c1scl->cn10(3)->arduino a5
@@ -17,7 +20,9 @@
 
 #include "stm32f446E.h"
 #include "string.h"
+#include <stdio.h>
 #define MY_ADDR	0x61
+uint8_t receive_complete = RESET;
 
 
 
@@ -28,6 +33,7 @@ extern void initialise_monitor_handles();
 
 //rcv buffer of 32 bytes
 uint8_t rcv_buff[32];
+
 
 void delay(void)
 {
@@ -53,7 +59,6 @@ void I2C1_GPIO_Init(void)
 
 }
 
-//init i2c1 peripheral
 void I2C1_Init(void){
 
 	I2C1Handle.pI2Cx = I2C1;
@@ -80,6 +85,40 @@ void GPIO_ButtonInit(void)
 	GPIO_Init(&GpioBtn);
 }
 
+
+
+/* I2C1 error interrupt: run this whenever I2C error interrupt is generated */
+void	I2C1_ER_IRQHandler(void)
+{
+	I2C_ERROR_IRQHandling(&I2C1Handle);
+}
+/* I2C2 event interrupt: run this whenever I2C event interrupt is generated */
+void	I2C1_EV_IRQHandler(void)
+{
+	I2C_EVENT_IRQHandling(&I2C1Handle);
+}
+
+void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEv)
+{
+	if(AppEv== I2C_EVENT_TX_COMPLETE)
+	{
+		printf("Tx is complete\n");
+
+	}
+	else if (AppEv == I2C_EVENT_RX_COMPLETE) {
+		printf("Rx is complete\n");
+		//signal the flag once RX is complete
+		receive_complete = SET;
+	}
+	else if (AppEv == I2C_ERROR_AF) {
+		printf("ERROR ACK FAILURE\n");
+		//close send data and generate stop condition on error
+		I2C_CloseSendData(pI2CHandle);
+		I2C_GenerateStopCondition(I2C1);
+	}
+
+}
+
 int main(void){
 
 	uint8_t commandcode;
@@ -88,18 +127,22 @@ int main(void){
 	//semihosting to print to console
 	initialise_monitor_handles();
 
-	printf("Application is runnint\n");
+	printf("Application is running\n");
 	//init user button on stm board
 	GPIO_ButtonInit();
-
+	//I2C PIN INIT
 	I2C1_GPIO_Init();
+	//I2C PERIPHERAL CONFIG
 	I2C1_Init();
+	//I2C IRQ CONFIG
+	I2C_IRQConfig(IRQ_NO_I2C1_EV, ENABLE);
+	I2C_IRQConfig(IRQ_NO_I2C1_ER, ENABLE);
 	//enable I2C1 peripheral
 	I2C_PeripheralControl(I2C1, ENABLE);
 
-	//send some data on button press (slave address is 0x68 set by arduino)
-	uint8_t some_data[]=  "We are testing I1c master Tx\n";
-	(void)some_data;
+	//manage acking
+	I2C_ManageAcking(I2C1,I2C_ACK_ENABLE);
+
 
 	while (1)
 	{
@@ -107,22 +150,33 @@ int main(void){
 		delay();//debounce prevention
 
 
-		// 1. send command to request length of data to be read from slave
+		// 1. send command to request length of data to be read from slave when not busy
 		commandcode = 0x51;
-		I2CMasterSendData(&I2C1Handle, &commandcode, 1, 0x68, ENABLE);
-		// 2. Read response of length command from slave
-		I2CMasterRcvData(&I2C1Handle, &length, 1, 0x68,  ENABLE);
+		while(I2CMasterSendDataIT(&I2C1Handle, &commandcode, 1, 0x68, ENABLE) != I2C_READY);
+
+		// 2. Read response of length command from slave when not busy
+
+		while (I2CMasterRcvDataIT(&I2C1Handle, &length, 1, 0x68,  ENABLE) != I2C_READY);
+
 		// 3. Begin command to read 'length' bytes of data
 		commandcode = 0x52;
-		I2CMasterSendData(&I2C1Handle, &commandcode, 1, 0x68, ENABLE);
-		I2CMasterRcvData(&I2C1Handle, rcv_buff, length, 0x68, DISABLE);
+		while(I2CMasterSendDataIT(&I2C1Handle, &commandcode, 1, 0x68, ENABLE) != I2C_READY);
 
+		while(I2CMasterRcvDataIT(&I2C1Handle, rcv_buff, length, 0x68, DISABLE)!= I2C_READY);
+
+		//need to wait until the RXNE interrupt is finished (RX is done): otherwise will
+		//not be ready to print data
+		receive_complete=RESET;
+		 //printf("receive complete is: %s", receive_complete);
+		while(receive_complete!=SET){};
 		//get rcv_buff from pointer rather than a return
-		rcv_buff[length+1] = '\0';
 
-		//print data to console using semihosting
-		//can also see data using logic analyzer
-		printf("Data : %s", rcv_buff);
+		 rcv_buff[length+1] = '\0';
+		 printf("Data : %s", rcv_buff);
+		 receive_complete=RESET;
+
+
+
 
 
 

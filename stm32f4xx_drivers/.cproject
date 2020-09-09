@@ -84,14 +84,19 @@
 							<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.23931443" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 						</tool>
 					</fileInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.2088185801" name="010i2c_master_tx_testing.c" rcbsApplicability="disable" resourcePath="Src/010i2c_master_tx_testing.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1062470539.1198111323">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1062470539.1198111323" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1062470539"/>
-					</fileInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.1680891507" name="stm32f407xx_gpio_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f407xx_gpio_driver.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.437462419" name="stm32f446xx_SPI_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f446xx_SPI_driver.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.2018154307" name="stm32f407xx.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f407xx.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.1537968228" name="stm32f407xx_i2c_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f407xx_i2c_driver.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.131684695" name="stm32f407xx_rcc_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f407xx_rcc_driver.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.1389487429" name="stm32f446E.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f446E.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.1979878849" name="stm32f446xx_gpio_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f446xx_gpio_driver.h" toolsToInvoke=""/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.363048608.513075463" name="stm32f446xx_I2C_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32f446xx_I2C_driver.h" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
-						<entry excluding="010i2c_master_tx_testing.c|008_spi_txrx_arduino.c|007_spi_tx_arduino.c|008_spi_tx_arduino2.c|002LEDbutton.c|006SPI_TX_test.c|006spi_tx_testing.c|001LLED_toggle.c|005Button_interrupt.c|003LEDbutton_external.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry excluding="012i2c_master_rx_testingIT.c|011i2c_masterrx_testing.c|009SPI_txrx_IT_arduino.c|010i2c_master_tx_testing.c|008_spi_txrx_arduino.c|007_spi_tx_arduino.c|008_spi_tx_arduino2.c|002LEDbutton.c|006SPI_TX_test.c|006spi_tx_testing.c|001LLED_toggle.c|005Button_interrupt.c|003LEDbutton_external.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Startup"/>
-						<entry excluding="Src/stm32f407xx_spi_driver.c|Src/stm32f407xx_gpio_driver.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
+						<entry excluding="Src/stm32f407xx_i2c_driver.c|Src/stm32f407xx_gpio_driver.c|Inc/stm32f407xx_i2c_driver.h|Inc/stm32f407xx_rcc_driver.h|Inc/stm32f407xx_gpio_driver.h|Src/stm32f407xx_rcc_driver.c|Inc/stm32f407xx.h|Src/stm32f407xx_spi_driver.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
